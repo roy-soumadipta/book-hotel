@@ -1,0 +1,28 @@
+{
+  "StartAt": "BookHotelState",
+  "States": {
+    "BookHotelState": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:<REGION>:<ACCOUNT_ID>:function:BookHotelClientS1P2",
+      "Parameters": {
+          "buyer_id.$": "$.purchase.buyer_id",
+          "start_date.$": "$.hotel.start_date",
+          "end_date.$": "$.hotel.end_date",
+          "near.$": "$.museum.name"
+      },
+      "ResultPath": "$.hotel",
+      "Next": "BookMuseumState"
+    },
+    "BookMuseumState": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:<REGION>:<ACCOUNT_ID>:function:BookMuseumClientS1P2",
+      "Parameters": {
+          "buyer_id.$": "$.purchase.buyer_id",
+          "when.$": "$.museum.when",
+          "museum_name.$": "$.museum.name"
+      },
+      "ResultPath": "$.museum",
+      "End": true
+    }
+  }
+}
